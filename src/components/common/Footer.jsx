@@ -34,7 +34,7 @@ const Footer = () => {
   };
 
   const socialLinks = [
-    { icon: Instagram, href: '#', label: 'Instagram' },
+    { icon: Instagram, href: 'https://www.instagram.com/parfumerieelhilali/', label: 'Instagram' },
     { icon: Facebook, href: '#', label: 'Facebook' },
     { icon: Twitter, href: '#', label: 'Twitter' },
     { icon: Mail, href: '#', label: 'Newsletter' }
@@ -61,6 +61,7 @@ const Footer = () => {
                   <a 
                     key={social.label}
                     href={social.href}
+                    target='_blank'
                     className="p-2 bg-white border border-gray-200 rounded-lg hover:bg-rose-50 hover:border-rose-200 transition-colors"
                   >
                     <Icon size={18} className="text-gray-600" />

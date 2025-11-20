@@ -112,7 +112,8 @@ const SearchBar = ({ onClose }) => {
                     <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
                             <div className="w-6 h-6 bg-gradient-to-r from-rose-500 to-pink-600 rounded-full"></div>
-                            <span className="text-lg font-bold text-gray-900">Glamour</span>
+                            <span className="text-lg font-bold text-gray-900">
+Elhilali Cosmitecs</span>
                         </div>
                         <button
                             onClick={onClose}

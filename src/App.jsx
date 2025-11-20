@@ -6,7 +6,7 @@ import Home from './pages/Home';
 import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
-import Checkout from './pages/Checkout'; // Add this import
+import Checkout from './pages/Checkout';
 import Categories from './pages/Categories';
 import Brands from './pages/Brands';
 
