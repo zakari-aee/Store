@@ -1,96 +1,110 @@
-import React, { createContext, useContext, useReducer } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const CartContext = createContext();
 
-const cartReducer = (state, action) => {
-  switch (action.type) {
-    case 'ADD_TO_CART':
-      const existingItem = state.items.find(item => item.id === action.payload.id);
-      if (existingItem) {
-        return {
-          ...state,
-          items: state.items.map(item =>
-            item.id === action.payload.id
-              ? { ...item, quantity: item.quantity + 1 }
-              : item
-          )
-        };
-      }
-      return {
-        ...state,
-        items: [...state.items, { ...action.payload, quantity: 1 }]
-      };
-    
-    case 'REMOVE_FROM_CART':
-      return {
-        ...state,
-        items: state.items.filter(item => item.id !== action.payload)
-      };
-    
-    case 'UPDATE_QUANTITY':
-      return {
-        ...state,
-        items: state.items.map(item =>
-          item.id === action.payload.id
-            ? { ...item, quantity: action.payload.quantity }
-            : item
-        )
-      };
-    
-    case 'CLEAR_CART':
-      return {
-        ...state,
-        items: []
-      };
-    
-    default:
-      return state;
-  }
-};
-
-const initialState = {
-  items: []
-};
-
 export const CartProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(cartReducer, initialState);
+  const [cartItems, setCartItems] = useState([]);
 
-  const addToCart = (product) => {
-    dispatch({ type: 'ADD_TO_CART', payload: product });
+  // Load cart from localStorage on app start
+  useEffect(() => {
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+      try {
+        setCartItems(JSON.parse(savedCart));
+      } catch (error) {
+        console.error('Error loading cart from localStorage:', error);
+        setCartItems([]);
+      }
+    }
+  }, []);
+
+  // Save cart to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  // Add item to cart
+  const addToCart = (product, quantity = 1) => {
+    setCartItems(prevItems => {
+      const existingItem = prevItems.find(item => item.id === product.id);
+      
+      if (existingItem) {
+        // If item exists, update quantity
+        return prevItems.map(item =>
+          item.id === product.id 
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        );
+      } else {
+        // If item doesn't exist, add new item
+        return [...prevItems, { 
+          ...product, 
+          quantity,
+          price: product.normalPrice // Use normalPrice as the base price
+        }];
+      }
+    });
   };
 
+  // Remove item from cart
   const removeFromCart = (productId) => {
-    dispatch({ type: 'REMOVE_FROM_CART', payload: productId });
+    setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
   };
 
+  // Update item quantity
   const updateQuantity = (productId, quantity) => {
     if (quantity <= 0) {
       removeFromCart(productId);
-    } else {
-      dispatch({ type: 'UPDATE_QUANTITY', payload: { id: productId, quantity } });
+      return;
     }
+    
+    setCartItems(prevItems =>
+      prevItems.map(item =>
+        item.id === productId ? { ...item, quantity } : item
+      )
+    );
   };
 
+  // Clear entire cart
   const clearCart = () => {
-    dispatch({ type: 'CLEAR_CART' });
+    setCartItems([]);
   };
 
-  const getCartTotal = () => {
-    return state.items.reduce((total, item) => total + (item.price * item.quantity), 0);
-  };
-
+  // Get total number of items in cart
   const getCartItemsCount = () => {
-    return state.items.reduce((count, item) => count + item.quantity, 0);
+    return cartItems.reduce((total, item) => total + item.quantity, 0);
+  };
+
+  // Get cart total price
+  const getCartTotal = () => {
+    return cartItems.reduce((total, item) => {
+      // Use bulk price if applicable, otherwise use normal price
+      const price = item.priceBulk && item.quantity >= 3 ? item.priceBulk : item.normalPrice;
+      return total + (price * item.quantity);
+    }, 0);
+  };
+
+  // Check if item is in cart
+  const isInCart = (productId) => {
+    return cartItems.some(item => item.id === productId);
+  };
+
+  // Get item quantity in cart
+  const getItemQuantity = (productId) => {
+    const item = cartItems.find(item => item.id === productId);
+    return item ? item.quantity : 0;
   };
 
   const value = {
-    items: state.items,
+    cartItems,
     addToCart,
     removeFromCart,
     updateQuantity,
     clearCart,
+    getCartItemsCount,
     getCartTotal,
-    getCartItemsCount
+    isInCart,
+    getItemQuantity
   };
 
   return (
