@@ -32,15 +32,6 @@ const Header = () => {
   return (
     <>
       <header className="bg-white border-b border-gray-100 sticky top-0 z-50 backdrop-blur-sm bg-white/95">
-        {/* Top Bar */}
-        <div className="bg-rose-50 py-2">
-          <div className="container mx-auto px-4">
-            <p className="text-center text-sm text-rose-700">
-              ✨ Free shipping on orders over $50 + 3 free samples
-            </p>
-          </div>
-        </div>
-
         {/* Main Header */}
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">

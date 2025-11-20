@@ -12,11 +12,11 @@ export const mockProducts = [
     featured: true,
     isNew: false,
     discount: 20,
-    description: "Long-lasting matte liquid lipstick with intense color payoff"
+    description: "Long-lasting matte liquid lipstick with intense color payoff. Weightless formula that doesn't dry out lips."
   },
   {
     id: 2,
-    name: "Hydrating Face Serum",
+    name: "Hydrating Face Serum with Vitamin C",
     brand: "La Roche-Posay",
     price: 29.99,
     image: "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400",
@@ -25,11 +25,11 @@ export const mockProducts = [
     rating: 4.6,
     featured: true,
     isNew: true,
-    description: "Lightweight serum with hyaluronic acid for deep hydration"
+    description: "Lightweight serum with hyaluronic acid and vitamin C for deep hydration and brightening."
   },
   {
     id: 3,
-    name: "Volume Boost Mascara",
+    name: "Volume Boost Mascara - Black",
     brand: "L'Oreal",
     price: 14.99,
     originalPrice: 19.99,
@@ -37,14 +37,14 @@ export const mockProducts = [
     category: "Makeup",
     subcategory: "Mascara",
     rating: 4.4,
-    featured: false,
+    featured: true,
     isNew: true,
     discount: 25,
-    description: "Volumizing mascara for dramatic lashes"
+    description: "Volumizing mascara for dramatic lashes without clumps or flakes. Water-resistant formula."
   },
   {
     id: 4,
-    name: "Repairing Hair Mask",
+    name: "Repairing Hair Mask Treatment",
     brand: "Olaplex",
     price: 38.00,
     image: "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=400",
@@ -53,11 +53,11 @@ export const mockProducts = [
     rating: 4.9,
     featured: true,
     isNew: false,
-    description: "Intensive repairing treatment for damaged hair"
+    description: "Intensive repairing treatment for damaged hair. Restores strength and shine in one use."
   },
   {
     id: 5,
-    name: "Floral Eau de Parfum",
+    name: "Floral Eau de Parfum - No. 5",
     brand: "Chanel",
     price: 85.00,
     image: "https://images.unsplash.com/photo-1541643600914-78b084683601?w=400",
@@ -66,11 +66,11 @@ export const mockProducts = [
     rating: 4.7,
     featured: false,
     isNew: true,
-    description: "Elegant floral fragrance with lasting scent"
+    description: "Elegant floral fragrance with lasting scent. Notes of bergamot, rose, and sandalwood."
   },
   {
     id: 6,
-    name: "Makeup Brush Set",
+    name: "Professional Makeup Brush Set",
     brand: "Morphe",
     price: 49.99,
     originalPrice: 69.99,
@@ -78,36 +78,35 @@ export const mockProducts = [
     category: "Tools & Brushes",
     subcategory: "Brush Set",
     rating: 4.5,
-    featured: true,
+    featured: false,
     isNew: false,
     discount: 30,
-    description: "Professional 12-piece makeup brush collection"
-  }
-];
-
-export const categories = [
-  {
-    name: "Skincare",
-    subcategories: ["Cleansers", "Moisturizers", "Serums", "Masks", "Sunscreen", "Toners"]
+    description: "Professional 12-piece makeup brush collection. Synthetic bristles for flawless application."
   },
   {
-    name: "Makeup",
-    subcategories: ["Foundation", "Concealer", "Lipstick", "Mascara", "Eyeshadow", "Blush"]
+    id: 7,
+    name: "CC Cream with SPF 50",
+    brand: "IT Cosmetics",
+    price: 39.99,
+    image: "https://images.unsplash.com/photo-1617897903246-719242758050?w=400",
+    category: "Makeup",
+    subcategory: "Foundation",
+    rating: 4.8,
+    featured: false,
+    isNew: true,
+    description: "Color-correcting cream with full coverage and sun protection. Hydrating and lightweight."
   },
   {
-    name: "Haircare",
-    subcategories: ["Shampoo", "Conditioner", "Hair Mask", "Hair Oil", "Styling", "Treatment"]
-  },
-  {
-    name: "Fragrance",
-    subcategories: ["Perfume", "Body Spray", "Roll-on", "Sample Set", "Home Fragrance"]
-  },
-  {
-    name: "Bath & Body",
-    subcategories: ["Body Wash", "Body Lotion", "Body Scrub", "Hand Cream", "Bath Bombs"]
-  },
-  {
-    name: "Tools & Brushes",
-    subcategories: ["Makeup Brushes", "Beauty Blenders", "Tweezers", "Eyelash Curlers", "Mirrors"]
+    id: 8,
+    name: "AHA/BHA Exfoliating Toner",
+    brand: "Paula's Choice",
+    price: 32.00,
+    image: "https://images.unsplash.com/photo-1556228831-68d71ae8a139?w=400",
+    category: "Skincare",
+    subcategory: "Toner",
+    rating: 4.7,
+    featured: false,
+    isNew: true,
+    description: "Gentle exfoliating toner with AHAs and BHAs to unclog pores and smooth skin texture."
   }
 ];
