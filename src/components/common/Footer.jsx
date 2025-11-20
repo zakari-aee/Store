@@ -42,8 +42,6 @@ const Footer = () => {
 
   return (
     <footer className="bg-gray-50 text-gray-700">
-      
-
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
@@ -73,41 +71,20 @@ const Footer = () => {
           </div>
 
           {/* Footer Links */}
-          {['shop', 'help', 'about', 'contact'].map((section, idx) => {
-            if (section === 'contact') {
-              return (
-                <div key={idx}>
-                  <h4 className="font-semibold text-gray-900 mb-4">Contact</h4>
-                  <div className="space-y-2 text-sm text-gray-600">
-                    <p>📞 1-800-HILALI</p>
-                    <p>✉️ help@elhilali.com</p>
-                    <p>🕒 Mon-Fri: 9AM-6PM</p>
-                    <div className="pt-3">
-                      <p className="font-medium text-gray-900 mb-1">Secure Payment</p>
-                      <div className="flex space-x-2 text-lg">
-                        {['💳', '🔒', '📱'].map((icon, i) => <span key={i}>{icon}</span>)}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            } else {
-              return (
-                <div key={idx}>
-                  <h4 className="font-semibold text-gray-900 mb-4 capitalize">{section}</h4>
-                  <ul className="space-y-2">
-                    {footerSections[section].map((item) => (
-                      <li key={item}>
-                        <a href="#" className="text-gray-600 hover:text-rose-600 text-sm transition-colors">
-                          {item}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              );
-            }
-          })}
+          {['shop', 'help', 'about'].map((section, idx) => (
+            <div key={idx}>
+              <h4 className="font-semibold text-gray-900 mb-4 capitalize">{section}</h4>
+              <ul className="space-y-2">
+                {footerSections[section].map((item) => (
+                  <li key={item}>
+                    <a href="#" className="text-gray-600 hover:text-rose-600 text-sm transition-colors">
+                      {item}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -121,7 +98,7 @@ const Footer = () => {
               </a>
             ))}
           </div>
-          <p>© 2024 El Hilali Cosmetics. All rights reserved.</p>
+          <p>© 2025 El Hilali Cosmetics. All rights reserved.</p>
         </div>
       </div>
     </footer>

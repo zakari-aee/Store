@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, ShoppingBag, User, Heart, Menu, X } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import SearchBar from './SearchBar';
 import CartSidebar from '../cart/CartSidebar';
 import { useCart } from '../../contexts/CartContext';
@@ -11,6 +11,12 @@ const Header = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { getCartItemsCount } = useCart();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Scroll to top on route change (page refresh or navigation)
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   const navigation = {
     categories: [
@@ -38,6 +44,18 @@ const Header = () => {
       { name: 'Sale', path: '/sale' },
       { name: 'Gifts', path: '/gifts' }
     ]
+  };
+
+  const handleLogoClick = (e) => {
+    // If we're already on the home page, scroll to top
+    if (location.pathname === '/') {
+      e.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+    // Otherwise, the Link will handle navigation to home
   };
 
   const handleCategoryClick = (categoryName) => {
@@ -68,7 +86,11 @@ const Header = () => {
                 <Menu size={20} className="text-gray-600" />
               </button>
               
-              <Link to="/" className="flex items-center space-x-2">
+              <Link 
+                to="/" 
+                className="flex items-center space-x-2"
+                onClick={handleLogoClick}
+              >
                 <div className="w-8 h-8 bg-gradient-to-r from-rose-500 to-pink-600 rounded-full"></div>
                 <span className="text-xl font-bold text-gray-900">Elhilali Cosmitecs</span>
               </Link>

@@ -283,57 +283,90 @@ const Home = () => {
       </section>
 
       {/* Visit Store Section */}
-      <section className="py-16 bg-gradient-to-r from-rose-500 to-pink-600 text-white">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">Visit Our Store</h2>
-              <p className="text-rose-100 text-lg mb-6">
-                Experience the El Hilali Cosmetics difference in person. Our knowledgeable staff will help you find the perfect products for your needs.
-              </p>
-              <div className="space-y-4 mb-6">
-                <div className="flex items-center space-x-3">
-                  <MapPin size={20} className="text-rose-200" />
-                  <span>123 Beauty Street, Casablanca, Morocco</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Phone size={20} className="text-rose-200" />
-                  <span>+212 522-XXX-XXX</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Clock size={20} className="text-rose-200" />
-                  <span>Monday - Saturday: 9:00 AM - 8:00 PM</span>
-                </div>
-              </div>
-              <Button 
-                variant="primary" 
-                size="large" 
-                className="bg-white text-rose-600 hover:bg-gray-100"
-                onClick={() => window.open('https://maps.google.com', '_blank')}
-              >
-                Get Directions
-              </Button>
+<section className="py-20 bg-white">
+  <div className="container mx-auto px-4">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      {/* Store Information */}
+      <div className="text-center lg:text-left">
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+          Visit Our Store
+        </h2>
+        <p className="text-gray-600 text-lg mb-8 leading-relaxed">
+          Experience the El Hilali Cosmetics difference in person. Our knowledgeable staff will help you find the perfect products for your needs.
+        </p>
+        
+        {/* Store Details */}
+        <div className="space-y-4 mb-8">
+          <div className="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
+            <div className="w-10 h-10 bg-rose-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <MapPin size={18} className="text-rose-600" />
             </div>
-            
-            {/* Store Image in Visit Store Section */}
-            <div className="bg-white/10 rounded-2xl p-6 text-center overflow-hidden">
-              <div className="w-full h-64 rounded-lg overflow-hidden mb-4">
-                <img 
-                  src={storeImage} 
-                  alt="El Hilali Cosmetics Store Interior" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <h3 className="text-2xl font-bold mb-2">El Hilali Cosmetics</h3>
-              <p className="text-rose-100 mb-4">Your Beauty Destination</p>
-              <div className="bg-white/20 rounded-lg p-4">
-                <p className="font-semibold">Special Offer for New Customers!</p>
-                <p className="text-sm text-rose-100">Get 15% off your first purchase in-store</p>
-              </div>
+            <div className="text-left">
+              <p className="font-medium text-gray-900">Store Location</p>
+              <p className="text-gray-600 text-sm">123 Beauty Street, Meknes, Morocco</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
+            <div className="w-10 h-10 bg-rose-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <Phone size={18} className="text-rose-600" />
+            </div>
+            <div className="text-left">
+              <p className="font-medium text-gray-900">Contact Us</p>
+              <p className="text-gray-600 text-sm">+212 522-XXX-XXX</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
+            <div className="w-10 h-10 bg-rose-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <Clock size={18} className="text-rose-600" />
+            </div>
+            <div className="text-left">
+              <p className="font-medium text-gray-900">Opening Hours</p>
+              <p className="text-gray-600 text-sm">Monday - Saturday: 9:00 AM - 8:00 PM</p>
             </div>
           </div>
         </div>
-      </section>
+
+        <Button 
+          variant="premium" 
+          size="large" 
+          className="justify-center lg:justify-start"
+          onClick={() => window.open('https://maps.google.com', '_blank')}
+        >
+          Get Directions
+        </Button>
+      </div>
+      
+      {/* Store Image */}
+      <div className="relative">
+        <div className="bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl p-6 border border-rose-100">
+          <div className="w-full h-80 rounded-xl overflow-hidden mb-6">
+            <img 
+              src={storeImage} 
+              alt="El Hilali Cosmetics Store Interior" 
+              className="w-full h-full object-cover"
+            />
+          </div>
+          
+          <div className="text-center">
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">El Hilali Cosmetics</h3>
+            <p className="text-gray-600 mb-4">Your Trusted Beauty Destination</p>
+            
+            <div className="bg-rose-50 border border-rose-200 rounded-lg p-4 inline-block">
+              <p className="font-semibold text-rose-700 text-sm">Special Offer for New Customers</p>
+              <p className="text-rose-600 text-xs">Get 15% off your first purchase in-store</p>
+            </div>
+          </div>
+        </div>
+        
+        {/* Decorative Elements */}
+        <div className="absolute -top-4 -right-4 w-8 h-8 bg-rose-200 rounded-full opacity-50"></div>
+        <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-rose-100 rounded-full opacity-50"></div>
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* CTA Section */}
       <section className="py-20 bg-white">
