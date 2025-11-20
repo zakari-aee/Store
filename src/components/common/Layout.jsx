@@ -1,15 +1,17 @@
 import React from 'react';
 import Header from './Header';
 import Footer from './Footer';
+import WhatsAppButton from './WhatsAppButton'; // Add this import
 
 const Layout = ({ children }) => {
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-grow">
+      <main className="flex-1">
         {children}
       </main>
       <Footer />
+      <WhatsAppButton /> {/* Add this line */}
     </div>
   );
 };

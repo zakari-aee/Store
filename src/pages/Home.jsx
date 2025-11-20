@@ -379,22 +379,24 @@ const Home = () => {
                                 </div>
                             </div>
 
-                            <Button
-                                variant="premium"
-                                size="large"
-                                className="justify-center lg:justify-start"
-                                onClick={() => window.open('https://maps.google.com', '_blank')}
-                            >
-                                Get Directions
-                            </Button>
-                            <Button
-                                variant="outline"
-                                size="large"
-                                className="justify-center border-rose-500 text-rose-600 hover:bg-rose-50"
-                                onClick={() => window.open('tel:+212522XXXXXX')}
-                            >
-                                Contact Us
-                            </Button>
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                                <Button
+                                    variant="premium"
+                                    size="large"
+                                    className="justify-center lg:justify-start"
+                                    onClick={() => window.open('https://maps.google.com', '_blank')}
+                                >
+                                    Get Directions
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="large"
+                                    className="justify-center border-rose-500 text-rose-600 hover:bg-rose-50"
+                                    onClick={() => window.open('tel:+212522XXXXXX')}
+                                >
+                                    Contact Us
+                                </Button>
+                            </div>
                         </div>
 
                         {/* Store Image */}
