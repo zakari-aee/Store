@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import { Search, ShoppingBag, User, Heart, Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import SearchBar from './SearchBar';
+import CartSidebar from '../cart/CartSidebar';
+import { useCart } from '../../contexts/CartContext';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const { getCartItemsCount } = useCart();
 
   const navigation = {
     categories: [
@@ -31,7 +36,16 @@ const Header = () => {
 
   return (
     <>
-      <header className="bg-white border-b border-gray-100 sticky top-0 z-50 backdrop-blur-sm bg-white/95">
+      <header className="bg-white border-b border-gray-100 sticky top-0 z-40 backdrop-blur-sm bg-white/95">
+        {/* Top Bar */}
+        <div className="bg-rose-50 py-2">
+          <div className="container mx-auto px-4 text-center">
+            <p className="text-sm text-rose-700">
+              Free shipping on orders over $50
+            </p>
+          </div>
+        </div>
+
         {/* Main Header */}
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -44,10 +58,10 @@ const Header = () => {
                 <Menu size={20} className="text-gray-600" />
               </button>
               
-              <a href="/" className="flex items-center space-x-2">
+              <Link to="/" className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-gradient-to-r from-rose-500 to-pink-600 rounded-full"></div>
                 <span className="text-xl font-bold text-gray-900">Glamour</span>
-              </a>
+              </Link>
             </div>
 
             {/* Center: Desktop Navigation */}
@@ -59,26 +73,26 @@ const Header = () => {
                   </button>
                   <div className="absolute top-full left-0 w-64 bg-white shadow-xl rounded-lg py-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border border-gray-100">
                     {category.subcategories.map((subcategory) => (
-                      <a 
+                      <Link 
                         key={subcategory} 
-                        href="#" 
+                        to={`/products?category=${subcategory.toLowerCase()}`} 
                         className="block px-4 py-2 text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition-colors"
                       >
                         {subcategory}
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 </div>
               ))}
               
               {navigation.pages.map((page) => (
-                <a 
+                <Link 
                   key={page} 
-                  href="#" 
+                  to={`/${page.toLowerCase().replace(' ', '-')}`} 
                   className="text-gray-700 hover:text-rose-600 font-medium transition-colors"
                 >
                   {page}
-                </a>
+                </Link>
               ))}
             </nav>
 
@@ -102,12 +116,30 @@ const Header = () => {
                 </span>
               </button>
               
-              <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative">
+              {/* Cart Button - Fixed to only open sidebar, not navigate */}
+              <button 
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative"
+                onClick={() => setIsCartOpen(true)}
+              >
                 <ShoppingBag size={20} className="text-gray-600" />
-                <span className="absolute -top-1 -right-1 bg-rose-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                  3
-                </span>
+                {getCartItemsCount() > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-rose-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {getCartItemsCount()}
+                  </span>
+                )}
               </button>
+            </div>
+          </div>
+
+          {/* Mobile Search */}
+          <div className="md:hidden mt-4">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search for products, brands..."
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+              />
+              <Search className="absolute right-3 top-2.5 text-gray-400" size={20} />
             </div>
           </div>
         </div>
@@ -141,13 +173,14 @@ const Header = () => {
               ))}
               
               {navigation.pages.map((page) => (
-                <a 
+                <Link 
                   key={page} 
-                  href="#" 
+                  to={`/${page.toLowerCase().replace(' ', '-')}`} 
                   className="block px-4 py-3 text-gray-700 hover:bg-gray-50 border-b border-gray-100"
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   {page}
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -158,6 +191,12 @@ const Header = () => {
       {isSearchOpen && (
         <SearchBar onClose={() => setIsSearchOpen(false)} />
       )}
+
+      {/* Cart Sidebar - Higher z-index to ensure it appears above everything */}
+      <CartSidebar 
+        isOpen={isCartOpen} 
+        onClose={() => setIsCartOpen(false)} 
+      />
     </>
   );
 };

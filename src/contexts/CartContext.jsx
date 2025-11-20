@@ -49,8 +49,7 @@ const cartReducer = (state, action) => {
 };
 
 const initialState = {
-  items: [],
-  total: 0
+  items: []
 };
 
 export const CartProvider = ({ children }) => {

@@ -1,32 +1,53 @@
 import React, { useState } from 'react';
-import { Star, Heart, ShoppingBag, Eye } from 'lucide-react';
+import { Star, Heart, ShoppingBag, Eye, Package } from 'lucide-react';
+import { useCart } from '../../contexts/CartContext';
 import Button from '../ui/Button';
 import Card from '../ui/Card';
+import Modal from '../ui/Modal';
+import ProductDetails from './ProductDetails';
 
 const ProductCard = ({ product }) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
-  const [isQuickView, setIsQuickView] = useState(false);
+  const [showProductDetails, setShowProductDetails] = useState(false);
+  const { addToCart } = useCart();
+
+  const calculateDiscount = () => {
+    return Math.round(((product.normalPrice - product.priceBulk) / product.normalPrice) * 100);
+  };
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
-    console.log('Added to cart:', product.name);
-    // Add to cart logic here
+    // Add product with normal price for single purchase
+    addToCart({
+      ...product,
+      price: product.normalPrice,
+      quantity: 1
+    });
   };
 
   const handleWishlist = (e) => {
     e.stopPropagation();
     setIsWishlisted(!isWishlisted);
-    console.log('Wishlist updated:', product.name);
   };
 
   const handleQuickView = (e) => {
     e.stopPropagation();
-    setIsQuickView(true);
+    setShowProductDetails(true);
   };
+
+  const handleCardClick = () => {
+    setShowProductDetails(true);
+  };
+
+  const hasBulkDiscount = product.priceBulk < product.normalPrice;
 
   return (
     <>
-      <Card hover className="overflow-hidden group relative">
+      <Card 
+        hover 
+        className="overflow-hidden group relative cursor-pointer"
+        onClick={handleCardClick}
+      >
         {/* Product Image */}
         <div className="relative overflow-hidden">
           <img 
@@ -42,9 +63,9 @@ const ProductCard = ({ product }) => {
                 New
               </span>
             )}
-            {product.discount && (
+            {hasBulkDiscount && (
               <span className="bg-rose-500 text-white px-2 py-1 text-xs rounded-full">
-                -{product.discount}%
+                Save {calculateDiscount()}%
               </span>
             )}
           </div>
@@ -97,24 +118,53 @@ const ProductCard = ({ product }) => {
           <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">{product.name}</h3>
           <p className="text-gray-600 text-sm mb-4 line-clamp-2">{product.description}</p>
           
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              {product.originalPrice && (
-                <span className="text-sm text-gray-500 line-through">${product.originalPrice}</span>
-              )}
-              <span className="text-lg font-bold text-gray-900">${product.price}</span>
+          {/* Pricing */}
+          <div className="space-y-2">
+            {/* Normal Price */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <span className="text-lg font-bold text-gray-900">${product.normalPrice}</span>
+                <span className="text-sm text-gray-500">each</span>
+              </div>
+              
+              {/* Mobile Add to Cart */}
+              <button 
+                onClick={handleAddToCart}
+                className="lg:hidden p-2 bg-rose-500 text-white rounded-full hover:bg-rose-600 transition-colors"
+              >
+                <ShoppingBag size={16} />
+              </button>
             </div>
-            
-            {/* Mobile Add to Cart */}
-            <button 
-              onClick={handleAddToCart}
-              className="lg:hidden p-2 bg-rose-500 text-white rounded-full hover:bg-rose-600 transition-colors"
-            >
-              <ShoppingBag size={16} />
-            </button>
+
+            {/* Bulk Price */}
+            {hasBulkDiscount && (
+              <div className="flex items-center justify-between bg-rose-50 rounded-lg p-2">
+                <div className="flex items-center space-x-2">
+                  <Package size={14} className="text-rose-600" />
+                  <span className="text-sm font-semibold text-rose-700">${product.priceBulk}</span>
+                  <span className="text-xs text-rose-600">bulk price</span>
+                </div>
+                <span className="text-xs text-rose-600 bg-rose-100 px-2 py-1 rounded-full">
+                  Save {calculateDiscount()}%
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </Card>
+
+      {/* Product Details Modal */}
+      <Modal 
+        isOpen={showProductDetails} 
+        onClose={() => setShowProductDetails(false)}
+        size="full"
+        showCloseButton={true}
+      >
+        <ProductDetails 
+          product={product} 
+          onClose={() => setShowProductDetails(false)} 
+        />
+      </Modal>
     </>
   );
 };
