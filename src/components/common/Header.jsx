@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Search, ShoppingBag, User, Heart, Menu, X } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import SearchBar from './SearchBar';
 import CartSidebar from '../cart/CartSidebar';
 import { useCart } from '../../contexts/CartContext';
@@ -10,6 +10,7 @@ const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { getCartItemsCount } = useCart();
+  const navigate = useNavigate();
 
   const navigation = {
     categories: [
@@ -31,21 +32,30 @@ const Header = () => {
       }
     ],
     brands: ['L\'Oreal', 'Maybelline', 'Nyx', 'MAC', 'Estee Lauder', 'Clinique'],
-    pages: ['New Arrivals', 'Best Sellers', 'Sale', 'Gifts']
+    pages: [
+      { name: 'New Arrivals', path: '/new-arrivals' },
+      { name: 'Best Sellers', path: '/best-sellers' },
+      { name: 'Sale', path: '/sale' },
+      { name: 'Gifts', path: '/gifts' }
+    ]
+  };
+
+  const handleCategoryClick = (categoryName) => {
+    navigate(`/products?category=${categoryName.toLowerCase()}`);
+    setIsMenuOpen(false);
+  };
+
+  const handleSubcategoryClick = (subcategoryName) => {
+    navigate(`/products?category=${subcategoryName.toLowerCase()}`);
+  };
+
+  const handleMainCategoryClick = (categoryName) => {
+    navigate(`/products?category=${categoryName.toLowerCase()}`);
   };
 
   return (
     <>
       <header className="bg-white border-b border-gray-100 sticky top-0 z-40 backdrop-blur-sm bg-white/95">
-        {/* Top Bar */}
-        <div className="bg-rose-50 py-2">
-          <div className="container mx-auto px-4 text-center">
-            <p className="text-sm text-rose-700">
-              Free shipping on orders over $50
-            </p>
-          </div>
-        </div>
-
         {/* Main Header */}
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -60,7 +70,7 @@ const Header = () => {
               
               <Link to="/" className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-gradient-to-r from-rose-500 to-pink-600 rounded-full"></div>
-                <span className="text-xl font-bold text-gray-900">Glamour</span>
+                <span className="text-xl font-bold text-gray-900">Elhilali Cosmitecs</span>
               </Link>
             </div>
 
@@ -68,18 +78,32 @@ const Header = () => {
             <nav className="hidden lg:flex items-center space-x-8">
               {navigation.categories.map((category) => (
                 <div key={category.name} className="relative group">
-                  <button className="flex items-center text-gray-700 hover:text-rose-600 font-medium py-2 transition-colors">
+                  {/* Main Category - Now clickable */}
+                  <button 
+                    onClick={() => handleMainCategoryClick(category.name)}
+                    className="flex items-center text-gray-700 hover:text-rose-600 font-medium py-2 transition-colors"
+                  >
                     {category.name}
                   </button>
-                  <div className="absolute top-full left-0 w-64 bg-white shadow-xl rounded-lg py-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border border-gray-100">
+                  
+                  {/* Dropdown for Subcategories */}
+                  <div className="absolute top-full left-0 w-64 bg-white shadow-xl rounded-lg py-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border border-gray-100 z-50">
+                    {/* View All Category Link */}
+                    <button 
+                      onClick={() => handleMainCategoryClick(category.name)}
+                      className="block w-full text-left px-4 py-2 text-rose-600 hover:bg-rose-50 font-medium transition-colors border-b border-gray-100 mb-2"
+                    >
+                      View All {category.name}
+                    </button>
+                    
                     {category.subcategories.map((subcategory) => (
-                      <Link 
+                      <button 
                         key={subcategory} 
-                        to={`/products?category=${subcategory.toLowerCase()}`} 
-                        className="block px-4 py-2 text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition-colors"
+                        onClick={() => handleSubcategoryClick(subcategory)}
+                        className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition-colors"
                       >
                         {subcategory}
-                      </Link>
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -87,36 +111,27 @@ const Header = () => {
               
               {navigation.pages.map((page) => (
                 <Link 
-                  key={page} 
-                  to={`/${page.toLowerCase().replace(' ', '-')}`} 
+                  key={page.name} 
+                  to={page.path} 
                   className="text-gray-700 hover:text-rose-600 font-medium transition-colors"
                 >
-                  {page}
+                  {page.name}
                 </Link>
               ))}
             </nav>
 
             {/* Right: User Actions */}
             <div className="flex items-center space-x-4">
+              {/* Search Button */}
               <button 
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                 onClick={() => setIsSearchOpen(true)}
               >
                 <Search size={20} className="text-gray-600" />
               </button>
+
               
-              <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative">
-                <User size={20} className="text-gray-600" />
-              </button>
-              
-              <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative">
-                <Heart size={20} className="text-gray-600" />
-                <span className="absolute -top-1 -right-1 bg-rose-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                  2
-                </span>
-              </button>
-              
-              {/* Cart Button - Fixed to only open sidebar, not navigate */}
+              {/* Cart Button */}
               <button 
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative"
                 onClick={() => setIsCartOpen(true)}
@@ -131,16 +146,15 @@ const Header = () => {
             </div>
           </div>
 
-          {/* Mobile Search */}
+          {/* Mobile Search Button */}
           <div className="md:hidden mt-4">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search for products, brands..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-              />
-              <Search className="absolute right-3 top-2.5 text-gray-400" size={20} />
-            </div>
+            <button
+              onClick={() => setIsSearchOpen(true)}
+              className="w-full flex items-center justify-center space-x-2 bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+            >
+              <Search size={20} />
+              <span>Search for products, brands...</span>
+            </button>
           </div>
         </div>
       </header>
@@ -163,25 +177,75 @@ const Header = () => {
             </div>
             
             <div className="h-full overflow-y-auto">
-              {navigation.categories.map((category) => (
-                <div key={category.name} className="border-b border-gray-100">
-                  <button className="w-full px-4 py-3 text-left font-medium text-gray-900 hover:bg-gray-50 flex items-center justify-between">
-                    {category.name}
-                    <span>+</span>
-                  </button>
-                </div>
-              ))}
-              
-              {navigation.pages.map((page) => (
+              {/* Categories */}
+              <div className="border-b border-gray-100">
+                <h3 className="px-4 py-3 font-semibold text-gray-900 bg-gray-50">Categories</h3>
+                {navigation.categories.map((category) => (
+                  <div key={category.name} className="border-b border-gray-100">
+                    {/* Main Category in Mobile */}
+                    <button
+                      onClick={() => handleCategoryClick(category.name)}
+                      className="w-full px-4 py-3 text-left font-medium text-gray-900 hover:bg-gray-50 flex items-center justify-between"
+                    >
+                      {category.name}
+                      <span className="text-gray-400">→</span>
+                    </button>
+                    
+                    {/* Subcategories in Mobile */}
+                    <div className="bg-gray-50 pl-6">
+                      {category.subcategories.map((subcategory) => (
+                        <button
+                          key={subcategory}
+                          onClick={() => {
+                            handleSubcategoryClick(subcategory);
+                            setIsMenuOpen(false);
+                          }}
+                          className="w-full px-4 py-2 text-left text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900 border-b border-gray-100 last:border-b-0"
+                        >
+                          {subcategory}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Pages */}
+              <div className="border-b border-gray-100">
+                <h3 className="px-4 py-3 font-semibold text-gray-900 bg-gray-50">Pages</h3>
+                {navigation.pages.map((page) => (
+                  <Link 
+                    key={page.name} 
+                    to={page.path} 
+                    className="block px-4 py-3 text-gray-700 hover:bg-gray-50 border-b border-gray-100"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {page.name}
+                  </Link>
+                ))}
+              </div>
+
+              {/* Quick Links */}
+              <div className="p-4">
+                <button 
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    setIsSearchOpen(true);
+                  }}
+                  className="w-full flex items-center justify-center space-x-2 bg-rose-500 text-white rounded-lg px-4 py-3 font-medium hover:bg-rose-600 transition-colors mb-3"
+                >
+                  <Search size={20} />
+                  <span>Search Products</span>
+                </button>
+                
                 <Link 
-                  key={page} 
-                  to={`/${page.toLowerCase().replace(' ', '-')}`} 
-                  className="block px-4 py-3 text-gray-700 hover:bg-gray-50 border-b border-gray-100"
+                  to="/categories" 
+                  className="block w-full text-center py-2 text-gray-600 hover:text-gray-900 transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  {page}
+                  All Categories
                 </Link>
-              ))}
+              </div>
             </div>
           </div>
         </div>
@@ -192,7 +256,7 @@ const Header = () => {
         <SearchBar onClose={() => setIsSearchOpen(false)} />
       )}
 
-      {/* Cart Sidebar - Higher z-index to ensure it appears above everything */}
+      {/* Cart Sidebar */}
       <CartSidebar 
         isOpen={isCartOpen} 
         onClose={() => setIsCartOpen(false)} 

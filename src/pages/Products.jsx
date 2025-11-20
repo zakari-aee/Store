@@ -15,8 +15,9 @@ const Products = () => {
   const [viewMode, setViewMode] = useState('grid');
   const [sortBy, setSortBy] = useState('featured');
 
-  // Get category from URL params
+  // Get parameters from URL
   const categoryParam = searchParams.get('category');
+  const searchQuery = searchParams.get('search');
 
   // Set initial category filter from URL
   useEffect(() => {
@@ -31,12 +32,43 @@ const Products = () => {
     }
   }, [categoryParam]);
 
-  // Simulate filtering
+  // Apply search filter from URL
+  useEffect(() => {
+    if (searchQuery) {
+      const searchResults = mockProducts.filter(product => {
+        const query = searchQuery.toLowerCase();
+        return (
+          product.name.toLowerCase().includes(query) ||
+          product.brand.toLowerCase().includes(query) ||
+          product.category.toLowerCase().includes(query) ||
+          product.description.toLowerCase().includes(query)
+        );
+      });
+      setFilteredProducts(searchResults);
+    } else {
+      setFilteredProducts(mockProducts);
+    }
+  }, [searchQuery]);
+
+  // Simulate filtering with all criteria
   useEffect(() => {
     setLoading(true);
     
     const timer = setTimeout(() => {
       let filtered = [...mockProducts];
+      
+      // Apply search filter first
+      if (searchQuery) {
+        filtered = filtered.filter(product => {
+          const query = searchQuery.toLowerCase();
+          return (
+            product.name.toLowerCase().includes(query) ||
+            product.brand.toLowerCase().includes(query) ||
+            product.category.toLowerCase().includes(query) ||
+            product.description.toLowerCase().includes(query)
+          );
+        });
+      }
       
       // Apply category filter
       if (activeFilters.category && activeFilters.category.length > 0) {
@@ -91,7 +123,7 @@ const Products = () => {
     }, 500);
     
     return () => clearTimeout(timer);
-  }, [activeFilters, sortBy]);
+  }, [activeFilters, sortBy, searchQuery]);
 
   const handleFiltersChange = (newFilters) => {
     setActiveFilters(newFilters);
@@ -101,19 +133,38 @@ const Products = () => {
     setActiveFilters({});
   };
 
+  // Determine page title and description based on URL parameters
+  const getPageHeader = () => {
+    if (searchQuery) {
+      return {
+        title: 'Search Results',
+        description: `Found ${filteredProducts.length} products for "${searchQuery}"`
+      };
+    } else if (categoryParam) {
+      return {
+        title: `${categoryParam} Products`,
+        description: `Discover our complete collection of ${categoryParam.toLowerCase()} products`
+      };
+    } else {
+      return {
+        title: 'All Products',
+        description: 'Discover our complete collection of premium beauty products'
+      };
+    }
+  };
+
+  const pageHeader = getPageHeader();
+
   return (
     <div className="min-h-screen bg-gray-50 py-6">
       <div className="container mx-auto px-4">
         {/* Page Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            {categoryParam ? `${categoryParam} Products` : 'All Products'}
+            {pageHeader.title}
           </h1>
           <p className="text-gray-600">
-            {categoryParam 
-              ? `Discover our complete collection of ${categoryParam.toLowerCase()} products`
-              : 'Discover our complete collection of premium beauty products'
-            }
+            {pageHeader.description}
           </p>
         </div>
 
@@ -235,6 +286,32 @@ const Products = () => {
                 <button className="bg-white border border-gray-300 text-gray-700 px-8 py-3 rounded-lg hover:bg-gray-50 transition-colors font-medium">
                   Load More Products
                 </button>
+              </div>
+            )}
+
+            {/* No Results Message */}
+            {!loading && filteredProducts.length === 0 && (
+              <div className="text-center py-12">
+                <div className="text-gray-400 mb-4">
+                  <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No products found</h3>
+                <p className="text-gray-600 mb-4">
+                  {searchQuery 
+                    ? `We couldn't find any products matching "${searchQuery}". Try adjusting your search terms.`
+                    : "We couldn't find any products matching your filters. Try adjusting your filters."
+                  }
+                </p>
+                {(searchQuery || Object.keys(activeFilters).length > 0) && (
+                  <button
+                    onClick={clearAllFilters}
+                    className="bg-rose-500 text-white px-6 py-2 rounded-lg hover:bg-rose-600 transition-colors font-medium"
+                  >
+                    Clear {searchQuery ? 'Search' : 'Filters'}
+                  </button>
+                )}
               </div>
             )}
           </div>
