@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, ShoppingBag, User, Heart, Menu, X } from 'lucide-react';
+import { Search, ShoppingBag, User, Heart, Menu, X, ChevronDown, ChevronRight } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import SearchBar from './SearchBar';
 import CartSidebar from '../cart/CartSidebar';
@@ -9,6 +9,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [expandedCategory, setExpandedCategory] = useState(null);
   const { getCartItemsCount } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
@@ -55,7 +56,6 @@ const Header = () => {
         behavior: 'smooth'
       });
     }
-    // Otherwise, the Link will handle navigation to home
   };
 
   const handleCategoryClick = (categoryName) => {
@@ -65,10 +65,23 @@ const Header = () => {
 
   const handleSubcategoryClick = (subcategoryName) => {
     navigate(`/products?category=${subcategoryName.toLowerCase()}`);
+    setIsMenuOpen(false);
   };
 
   const handleMainCategoryClick = (categoryName) => {
     navigate(`/products?category=${categoryName.toLowerCase()}`);
+  };
+
+  const toggleCategoryExpansion = (categoryName) => {
+    if (expandedCategory === categoryName) {
+      setExpandedCategory(null);
+    } else {
+      setExpandedCategory(categoryName);
+    }
+  };
+
+  const handleMobileCategoryClick = (categoryName) => {
+    toggleCategoryExpansion(categoryName);
   };
 
   return (
@@ -106,6 +119,7 @@ const Header = () => {
                     className="flex items-center text-gray-700 hover:text-rose-600 font-medium py-2 transition-colors"
                   >
                     {category.name}
+                    <ChevronDown size={16} className="ml-1" />
                   </button>
                   
                   {/* Dropdown for Subcategories */}
@@ -204,30 +218,39 @@ const Header = () => {
                 <h3 className="px-4 py-3 font-semibold text-gray-900 bg-gray-50">Categories</h3>
                 {navigation.categories.map((category) => (
                   <div key={category.name} className="border-b border-gray-100">
-                    {/* Main Category in Mobile */}
+                    {/* Main Category in Mobile - Now toggles expansion */}
                     <button
-                      onClick={() => handleCategoryClick(category.name)}
+                      onClick={() => handleMobileCategoryClick(category.name)}
                       className="w-full px-4 py-3 text-left font-medium text-gray-900 hover:bg-gray-50 flex items-center justify-between"
                     >
                       {category.name}
-                      <span className="text-gray-400">→</span>
+                      <span className={`transform transition-transform ${expandedCategory === category.name ? 'rotate-90' : ''}`}>
+                        <ChevronRight size={16} />
+                      </span>
                     </button>
                     
-                    {/* Subcategories in Mobile */}
-                    <div className="bg-gray-50 pl-6">
-                      {category.subcategories.map((subcategory) => (
+                    {/* Subcategories in Mobile - Only show when expanded */}
+                    {expandedCategory === category.name && (
+                      <div className="bg-gray-50 pl-6">
+                        {/* View All link for the category */}
                         <button
-                          key={subcategory}
-                          onClick={() => {
-                            handleSubcategoryClick(subcategory);
-                            setIsMenuOpen(false);
-                          }}
-                          className="w-full px-4 py-2 text-left text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900 border-b border-gray-100 last:border-b-0"
+                          onClick={() => handleCategoryClick(category.name)}
+                          className="w-full px-4 py-2 text-left text-sm text-rose-600 hover:bg-rose-50 font-medium border-b border-gray-100"
                         >
-                          {subcategory}
+                          View All {category.name}
                         </button>
-                      ))}
-                    </div>
+                        
+                        {category.subcategories.map((subcategory) => (
+                          <button
+                            key={subcategory}
+                            onClick={() => handleSubcategoryClick(subcategory)}
+                            className="w-full px-4 py-2 text-left text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900 border-b border-gray-100 last:border-b-0"
+                          >
+                            {subcategory}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
